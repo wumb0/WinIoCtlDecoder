@@ -26,6 +26,7 @@ Example:
 import sys
 import idc
 import idaapi
+import struct
 
 
 def winio_decode(ioctl_code):
@@ -147,15 +148,15 @@ class WinIoCtlPlugin(idaapi.plugin_t):
                'DeviceType, FunctionCode, AccessType and MethodType.')
     help = ''
     wanted_name = 'Windows IOCTL code decoder'
-    wanted_hotkey = 'Ctrl-Alt-D'
+    wanted_hotkey = 'Ctrl-Alt-I'
 
     def init(self):
         return idaapi.PLUGIN_OK
 
     def run(self, _=0):
-        if idc.GetOpType(idc.ScreenEA(), 1) != 5:   # Immediate
+        if idc.get_operand_type(idc.get_screen_ea(), 1) != 5:   # Immediate
             return
-        value = idc.GetOperandValue(idc.ScreenEA(), 1) & 0xffffffff
+        value = idc.get_operand_value(idc.get_screen_ea(), 1) & 0xffffffff
         winio_decode(value)
 
     def term(self):
